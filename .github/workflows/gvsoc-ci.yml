@@ -53,9 +53,17 @@ jobs:
           python -m pip install -r gapy/requirements.txt
           python -m pip install -r pulp/requirements.txt
 
-          source sourceme.sh
+          # Siapkan environment GVSoC
+          export GVSOC_WORKDIR="$GVSOC_DIR"
+          export PYTHONPATH="${PYTHONPATH:-}"
+          export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}"
 
-          export PYTHONPATH="$PROJECT_DIR${PYTHONPATH:+:$PYTHONPATH}"
+          # sourceme.sh menggunakan variabel opsional
+          set +u
+          source sourceme.sh
+          set -u
+
+          export PYTHONPATH="$PROJECT_DIR:$PYTHONPATH"
 
           make TARGETS=testbench \
             MODULES="$PROJECT_DIR" \
