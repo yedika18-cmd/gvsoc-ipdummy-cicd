@@ -20,3 +20,8 @@ venv/
 # File sementara
 *.swp
 *.tmp
+
+#file cadangan dan hasil simulasi
+test_master_backup.cpp
+trace_file.txt
+gvsoc_config.json
