@@ -1,0 +1,69 @@
+
+name: GVSoC Dummy IP CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  dummy-ip-test:
+    name: Build and Test Dummy IP
+    runs-on: ubuntu-22.04
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout Dummy IP Project
+        uses: actions/checkout@v4
+
+      - name: Install System Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            build-essential git doxygen \
+            python3-pip python3-venv \
+            libsdl2-dev curl cmake \
+            gtkwave libsndfile1-dev rsync \
+            autoconf automake texinfo \
+            libtool pkg-config \
+            libsdl2-ttf-dev wget \
+            python3-sphinx
+
+      - name: Clone GVSoC
+        run: |
+          git clone --recursive \
+            https://github.com/gvsoc/gvsoc.git \
+            "$RUNNER_TEMP/gvsoc"
+
+      - name: Build and Test
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          PROJECT_DIR="$GITHUB_WORKSPACE"
+          GVSOC_DIR="$RUNNER_TEMP/gvsoc"
+
+          python3 -m venv "$RUNNER_TEMP/gvsoc-venv"
+          source "$RUNNER_TEMP/gvsoc-venv/bin/activate"
+
+          cd "$GVSOC_DIR"
+
+          python -m pip install --upgrade pip
+          python -m pip install -r core/requirements.txt
+          python -m pip install -r gapy/requirements.txt
+          python -m pip install -r pulp/requirements.txt
+
+          source sourceme.sh
+
+          export PYTHONPATH="$PROJECT_DIR${PYTHONPATH:+:$PYTHONPATH}"
+
+          make TARGETS=testbench \
+            MODULES="$PROJECT_DIR" \
+            build
+
+          export PATH="$GVSOC_DIR/install/bin:$PATH"
+
+          cd "$PROJECT_DIR"
+
+          chmod +x scripts/test_dummy.sh
+          ./scripts/test_dummy.sh

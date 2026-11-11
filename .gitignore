@@ -1,0 +1,22 @@
+
+# Hasil build
+build/
+build*/
+CMakeFiles/
+CMakeCache.txt
+
+# Log pengujian
+test_logs/
+*.log
+
+# Cache Python
+__pycache__/
+*.pyc
+
+# Virtual environment
+.venv/
+venv/
+
+# File sementara
+*.swp
+*.tmp
