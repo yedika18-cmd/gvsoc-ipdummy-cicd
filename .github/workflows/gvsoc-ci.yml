@@ -53,6 +53,9 @@ jobs:
           python -m pip install -r gapy/requirements.txt
           python -m pip install -r pulp/requirements.txt
 
+          # Dependensi tambahan GVSoC
+          python -m pip install psutil
+
           # Siapkan environment GVSoC
           export GVSOC_WORKDIR="$GVSOC_DIR"
           export PYTHONPATH="${PYTHONPATH:-}"
