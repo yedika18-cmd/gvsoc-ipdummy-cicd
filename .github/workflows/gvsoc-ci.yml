@@ -65,9 +65,24 @@ jobs:
 
           export PYTHONPATH="$PROJECT_DIR:$PYTHONPATH"
 
+          # Menentukan lokasi header C++ GVSoC
+          GVSOC_INCLUDE="$GVSOC_DIR/engine/engine/include"
+
+          # Memastikan file header tersedia
+          test -f "$GVSOC_INCLUDE/vp/vp.hpp"
+
+          # Menambahkan lokasi header ke compiler C++
+          export CPLUS_INCLUDE_PATH="$GVSOC_INCLUDE${CPLUS_INCLUDE_PATH:+:$CPLUS_INCLUDE_PATH}"
+
+          # Build GVSoC dan Dummy IP
           make TARGETS=testbench \
             MODULES="$PROJECT_DIR" \
             build
+          #export PYTHONPATH="$PROJECT_DIR:$PYTHONPATH"
+
+          #make TARGETS=testbench \
+           # MODULES="$PROJECT_DIR" \
+            #build
 
           export PATH="$GVSOC_DIR/install/bin:$PATH"
 
