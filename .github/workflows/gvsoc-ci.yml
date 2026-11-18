@@ -31,9 +31,17 @@ jobs:
 
       - name: Clone GVSoC
         run: |
-          git clone --recursive \
+          git clone \
             https://github.com/gvsoc/gvsoc.git \
             "$RUNNER_TEMP/gvsoc"
+
+          cd "$RUNNER_TEMP/gvsoc"
+
+          # Gunakan versi yang berhasil pada ubuntu
+          git checkout dccb89b39c65d673c3165f7a2283fe293b73705b
+
+          # Ambil submodule sesuai commit tersebut
+          git submodule update --init --recursive
 
       - name: Build and Test
         shell: bash
