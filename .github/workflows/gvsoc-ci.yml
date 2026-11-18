@@ -57,12 +57,30 @@ jobs:
           cd "$GVSOC_DIR"
 
           python -m pip install --upgrade pip
-          python -m pip install -r core/requirements.txt
-          python -m pip install -r gapy/requirements.txt
-          python -m pip install -r pulp/requirements.txt
+
+          # Install requirements yang tersedia
+          for req in \
+            core/requirements.txt \
+            gapy/requirements.txt \
+            pulp/requirements.txt
+          do
+            if [ -f "$req" ]; then
+              echo "[INFO] Installing $req"
+              python -m pip install -r "$req"
+            else
+              echo "[INFO] Skipping missing $req"
+            fi
+          done
 
           # Dependensi tambahan GVSoC
-          python -m pip install psutil
+          #python -m pip install psutil
+          #python -m pip install --upgrade pip
+          #python -m pip install -r core/requirements.txt
+          #python -m pip install -r gapy/requirements.txt
+          #python -m pip install -r pulp/requirements.txt
+
+          # Dependensi tambahan GVSoC
+          #python -m pip install psutil
 
           # Siapkan environment GVSoC
           export GVSOC_WORKDIR="$GVSOC_DIR"
